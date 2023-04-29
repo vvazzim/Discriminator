@@ -1,31 +1,21 @@
 const mongoose = require('mongoose');
+const Utilisateur = require('./Utilisateur.model');
+const Schema = mongoose.Schema;
 
-const medecinSchema = new mongoose.Schema({
-    id_Medecin: {
-        type: Number,
-        required: true,
-        unique: true
+const medecinSchema = new Schema({
+    utilisateur: {
+        type: Schema.Types.ObjectId,
+        ref: 'Utilisateur',
     },
-    specialite: {
-        type: String,
-        required: true
-    },
-    adresse: {
-        type: String,
-        required: true
-    },
-    telephone: {
-        type: String,
-        required: true
-    },
-    experience: {
-        type: Number,
-        required: true
-    }
+    specialite: String,
+    cabinets: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'CabinetMedical',
+        },
+    ],
 });
 
-const MedecinModel = mongoose.model('medecin', medecinSchema);
+medecinSchema.add(Utilisateur.schema);
 
-
-
-module.exports = MedecinModel;
+module.exports = mongoose.model('Medecin', medecinSchema);

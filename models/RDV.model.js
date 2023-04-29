@@ -1,33 +1,19 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// Création du schéma de Rendez-vous
-const RendezVousSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
-    date: {
-        type: Date,
-        required: true
-    },
-    heure: {
-        type: String,
-        required: true
+const rendezvousSchema = new Schema({
+    medecin: {
+        type: Schema.Types.ObjectId,
+        ref: 'Medecin',
     },
     patient: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Patient'
+        type: Schema.Types.ObjectId,
+        ref: 'Patient',
     },
-    medecin: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Medecin'
-    }
+    date: Date,
+    heureDebut: String,
+    heureFin: String,
+    statut: String,
 });
 
-// Création du modèle pour la collection Rendez-vous
-const RendezVous = mongoose.model('rdv', RendezVousSchema);
-
-
-
-
-module.exports = RendezVous;
+module.exports = mongoose.model('Rendezvous', rendezvousSchema);

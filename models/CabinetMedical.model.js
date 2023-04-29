@@ -1,42 +1,24 @@
-
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const { Schema, ObjectId} = mongoose;
-
-const CabinetMedicalSchema = new Schema({
-
-
+const cabinetMedicalSchema = new Schema({
     nom: {
         type: String,
         required: true,
     },
     adresse: {
-        type: String,
-        required: true,
+        rue: String,
+        ville: String,
+        codePostal: String,
+        pays: String,
     },
+    numeroTelephone: String,
     medecins: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Medecin',
         },
     ],
-    assistants: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Assistant',
-        },
-    ],
-    dossiers_medicaux: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'DossierMedical',
-        },
-    ],
 });
 
-const CabinetMedicalModel = mongoose.model('cabinetMedical', CabinetMedicalSchema);
-
-
-
-module.exports = CabinetMedicalModel;
+module.exports = mongoose.model('CabinetMedical', cabinetMedicalSchema);

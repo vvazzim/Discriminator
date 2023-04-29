@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// Définition du schéma TraitementModel
-const traitementSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
-    medicament: { type: String, required: true },
-    posologie: { type: String, required: true },
+const traitementSchema = new Schema({
+    medicament: {
+        type: Schema.Types.ObjectId,
+        ref: 'Medicament',
+    },
+    posologie: String,
+    duree: Number,
+    dateDebut: Date,
 });
 
-// Création du modèle TraitementModel à partir du schéma
-const TraitementModel = mongoose.model('traitement', traitementSchema);
-
-// Export du modèle TraitementModel pour pouvoir l'utiliser dans d'autres fichiers
-module.exports = TraitementModel;
+module.exports = mongoose.model('Traitement', traitementSchema);

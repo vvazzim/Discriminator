@@ -1,123 +1,37 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mongoose = require('mongoose');
-const Patient = require('./models/Patient.model');
-const Medecin = require('./models/Medecin.model');
-const Facture = require('./models/Facture.model');
-const DossierMedical = require('./models/DossierMedical.model');
-const Consultation = require('./models/Consultation.model');
-const CabinetMedical = require('./models/CabinetMedical.model');
-const rdv = require('./models/RDV.model');
-const Prescription = require('./models/Prescription.model');
-const Traitement = require('./models/Traitement.model');
-const Utilisateur = require('./models/Utilisateur.model');
-const Assistant = require('./models/Assistant.model');
-
-mongoose.set('strictQuery', false);
-const ObjectId = mongoose.Types.ObjectId;
 
 
-var app = express();
 
+// Importing routes
+var indexRouter = require('./routes/index');
+const agendasRouter = require('./routes/Agenda.Routes');
+const archiveRouter = require('./routes/Archive.Routes');
+const arretTravailRouter = require('./routes/ArretTravail.Routes');
+const assistantRouter = require('./routes/Assistant.Routes');
+const bilanRouter = require('./routes/Bilan.Routes');
+const cabinetMedicalRoutes = require('./routes/CabinetMedical.Routes');
+const certificatRouter = require('./routes/Certificat.Routes');
+const consultationRouter = require('./routes/Consultation.Routes');
+const prescriptionRouter = require('./routes/Prescription.Routes');
+const dossierMedicalRouter = require('./routes/DossierMedical.Routes');
+
+const app = express();
+
+const url = "mongodb://127.0.0.1:27017/DBMediCall";
 
 // Connect to database
-const url ='mongodb://127.0.0.1:27017/DBMediCall' ;
-const connect = mongoose.connect(url );
-connect.then((db)=>{
+const connect = mongoose.connect(url);
+connect.then((db) => {
   console.log(url);
-  console.log('The DataBase is connected with the server now ')
-}).catch((err)=>{
-  console.log("Mongoose Connection Error =" , err.message)
+  console.log('The DataBase is connected with the server nowww ');
+}).catch((err) => {
+  console.log("Mongoose Connection Error =", err.message);
 });
-
-
-// Create and save new medecin
-const newMedecin = new Medecin({
-  id_Medecin: '0001',
-  specialite: 'Dermatologie',
-  adresse: 'Cité Bordj El Kiffan',
-  telephone: '0796133284',
-  experience: '15'
-});
-
-newMedecin.save()
-    .then(() => console.log('Medecin saved'))
-    .catch((err) => console.log(err));
-
-// Create and save new Facture
-const newFacture = new Facture({
-  id_facture: '0001',
-  date_facture: new Date("2023-02-02"),
-  montant: '200 000.00',
-  consultation: '0001'});
-
-newFacture.save()
-    .then(() => console.log('Facture saved'))
-    .catch((err) => console.log(err));
-
-
-
-
-
-// Create and save new Patient
-const newPatient = new Patient({
-  id: '0001',
-  nom: 'CHIKHI',
-  prenom: 'Wassim',
-  date_naissance: new Date("2001-02-14"),
-  email: 'chikhimedwassim@gmail.com',
-  tel: '0796133284',
-  adresse: 'Cite 93',
-});
-
-newPatient.save()
-    .then(() => console.log('Patient saved'))
-    .catch((err) => console.log(err));
-
-
-
-
-
-
-
-
-
-
-
-
-// Create and save new rendezVous
-const newTraitement = new Traitement({
-  id: '0001',
-  medicament: 'a3tiwlo doliprane',
-  posologie: 'ma3ando Walo',
-});
-
-newTraitement.save()
-    .then(() => console.log('Traitement saved'))
-    .catch((err) => console.log(err));
-
-// Create and save new rendezVous
-const newUtilisateur = new Utilisateur({
-  id: '0001',
-  nom: 'Khalil',
-  prenom:'chakib',
-  email: 'Chzkibkhalil@gmail.com',
-  mot_de_passe: 'bdefg02'
-});
-
-newUtilisateur.save()
-    .then(() => console.log('Utilisateur saved'))
-    .catch((err) => console.log(err));
-
-
-
-
-
-
-
 
 
 
@@ -132,7 +46,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Routes
+app.use('/', indexRouter);
+app.use('/agendas', agendasRouter);
+app.use('/archive', archiveRouter);
+app.use('/arret-travail', arretTravailRouter);
+app.use('/assistant', assistantRouter);
+app.use('/bilan', bilanRouter);
+app.use('/cabinet-medical', cabinetMedicalRoutes);
+app.use('/certificat', certificatRouter);
+app.use('/consultation', consultationRouter);
+app.use('/prescription', prescriptionRouter);
+  app.use('/DossierMedical', dossierMedicalRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -145,9 +70,19 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  console.error("Error details:", err);
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+
+
+// Start server
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
 
 module.exports = app;

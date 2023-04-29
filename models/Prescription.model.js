@@ -1,19 +1,28 @@
-const mongoose = require('mongoose');
-const traitement = require('./Traitement.model');
 
-// Définition du schéma PrescriptionModel
-const prescriptionSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
-    date_prescription: { type: Date, required: true },
-    traitement: { type: mongoose.Schema.Types.ObjectId, ref: 'Traitement' },
+const FichierMedical = require('./FichierMedical.model');
+const Traitement = require('./Traitement.model');
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const prescriptionSchema = new Schema({
+    // Your schema definition goes here
+    consultation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Consultation',
+        required: true,
+    },
+    traitements: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Traitement',
+    }],
+
 });
 
-// Création du modèle PrescriptionModel à partir du schéma
-const PrescriptionModel = mongoose.model('prescription', prescriptionSchema);
+prescriptionSchema.add(FichierMedical.schema);
+
+module.exports = mongoose.model('Prescription', prescriptionSchema);
 
 
 
 
-
-// Export du modèle PrescriptionModel pour pouvoir l'utiliser dans d'autres fichiers
-module.exports = PrescriptionModel;

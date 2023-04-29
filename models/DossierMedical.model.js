@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const dossierMedicalSchema = new mongoose.Schema({
-    id: { type: Number, required: true },
-    patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
-    prescriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Prescription' }],
-    consultations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Consultation' }]
+const dossierMedicalSchema = new Schema({
+    patient: {
+        type: Schema.Types.ObjectId,
+        ref: 'Patient',
+    },
+    fichiersMedicaux: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'FichierMedical',
+        },
+    ],
+
 });
 
-const DossierMedicalModel = mongoose.model('dossierMedical', dossierMedicalSchema);
-
-
-
-
-module.exports = DossierMedicalModel;
+module.exports = mongoose.model('DossierMedical', dossierMedicalSchema);

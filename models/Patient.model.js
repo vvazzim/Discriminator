@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
+const Utilisateur = require('./Utilisateur.model');
+const Schema = mongoose.Schema;
 
-// Définition du schéma PatientModel
-const patientSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
-    nom: { type: String, required: true },
-    prenom: { type: String, required: true },
-    date_naissance: { type: Date, required: true },
-    email: { type: String, required: true, unique: true },
-    tel: { type: String, required: true },
-    adresse: { type: String, required: true },
+const patientSchema = new Schema({
+    utilisateur: {
+        type: Schema.Types.ObjectId,
+        ref: 'Utilisateur',
+    },dossierMedical: {
+        type: Schema.Types.ObjectId,
+        ref: 'DossierMedical'
+    }
 });
 
-// Création du modèle PatientModel à partir du schéma
-const PatientModel = mongoose.model('patient', patientSchema);
+patientSchema.add(Utilisateur.schema);
 
-
-
-
-
-// Export du modèle PatientModel pour pouvoir l'utiliser dans d'autres fichiers
-module.exports = PatientModel;
+module.exports = mongoose.model('Patient', patientSchema);

@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
+const Utilisateur = require('./Utilisateur.model');
+const Schema = mongoose.Schema;
 
-const assistantSchema = new mongoose.Schema({
-    id_assistant: {
-        type: Number,
-        required: true
-    },
-    cabinet: {
-        type: String,
+const assistantSchema = new Schema({
+    cabinetMedical: {
+        type: Schema.Types.ObjectId,
         ref: 'CabinetMedical',
-        required: true
-    }
+        required: true,
+    },
+    utilisateur: {
+        type: Schema.Types.ObjectId,
+        ref: 'Utilisateur',
+    },
 });
 
-const AssistantModel = mongoose.model('assistant', assistantSchema);
+assistantSchema.add(Utilisateur.schema);
 
-
-
-module.exports = AssistantModel;
+module.exports = mongoose.model('Assistant', assistantSchema);

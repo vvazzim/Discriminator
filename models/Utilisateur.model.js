@@ -1,17 +1,29 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// Définition du schéma pour la collection "utilisateurs"
-const utilisateurSchema = new mongoose.Schema({
-    id: { type: Number, required: true },
-    nom: { type: String, required: true },
-    prenom: { type: String, required: true },
+const utilisateurSchema = new Schema({
+
     email: { type: String, required: true },
-    mot_de_passe: { type: String, required: true }
+
+    motDePasse: { type: String, required: true },
+
+    nom: { type: String, required: true },
+
+    prenom: { type: String, required: true },
+
+    telephone: { type: String, required: true },
+
+    adresse: { type: String, required: true },
+
+    typeUtilisateur: {
+        type: String,
+        required: true,
+        enum: ['medecin', 'assistant', 'patient', 'administrateur'],
+    },
+    token: {
+        type: String,
+        required: false
+    }
 });
 
-// Création de la collection "utilisateurs"
-const UtilisateurModel = mongoose.model('utilisateur', utilisateurSchema);
-
-
-
-module.exports = UtilisateurModel;
+module.exports = mongoose.model('Utilisateur', utilisateurSchema);
