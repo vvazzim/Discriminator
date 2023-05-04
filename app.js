@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 
 
 // Importing routes
@@ -58,6 +58,16 @@ app.use('/certificat', certificatRouter);
 app.use('/consultation', consultationRouter);
 app.use('/prescription', prescriptionRouter);
   app.use('/DossierMedical', dossierMedicalRouter);
+
+
+
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

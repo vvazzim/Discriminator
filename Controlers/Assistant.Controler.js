@@ -25,14 +25,32 @@ exports.getAssistantById = async (req, res) => {
 };
 
 exports.ajouterAssistant = async (req, res) => {
-    const { nom, prenom, email, motDePasse, telephone, adresse } = req.body;
+    const { nom, prenom, email, motDePasse, telephone, adresse, cabinetMedical } = req.body;
     try {
         // On crée un nouvel utilisateur
-        const nouvelUtilisateur = new Utilisateur({ nom, prenom, email, motDePasse, telephone, adresse });
+        const nouvelUtilisateur = new Utilisateur({
+            nom,
+            prenom,
+            email,
+            motDePasse,
+            telephone,
+            adresse,
+            typeUtilisateur: 'assistant'
+        });
         // On sauvegarde le nouvel utilisateur dans la base de données
         await nouvelUtilisateur.save();
         // On crée un nouvel assistant associé à l'utilisateur créé précédemment
-        const nouvelAssistant = new Assistant({ utilisateur: nouvelUtilisateur._id });
+        const nouvelAssistant = new Assistant({
+            utilisateur: nouvelUtilisateur._id,
+            nom,
+            prenom,
+            email,
+            motDePasse,
+            telephone,
+            adresse,
+            cabinetMedical,
+            typeUtilisateur: 'assistant' // Ajoutez cette ligne si nécessaire
+        });
         // On sauvegarde le nouvel assistant dans la base de données
         await nouvelAssistant.save();
         res.json(nouvelAssistant);
@@ -41,6 +59,9 @@ exports.ajouterAssistant = async (req, res) => {
         res.status(500).send('Erreur du serveur');
     }
 };
+
+
+
 
 exports.modifierAssistant = async (req, res) => {
     const { nom, prenom, email, motDePasse, telephone, adresse } = req.body;
