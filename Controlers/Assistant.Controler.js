@@ -25,34 +25,18 @@ exports.getAssistantById = async (req, res) => {
 };
 
 exports.ajouterAssistant = async (req, res) => {
-    const { nom, prenom, email, motDePasse, telephone, adresse, cabinetMedical } = req.body;
+    const utilisateurId = req.body.utilisateurId;
+    console.log("j'y vais");
     try {
-        // On crée un nouvel utilisateur
-        const nouvelUtilisateur = new Utilisateur({
-            nom,
-            prenom,
-            email,
-            motDePasse,
-            telephone,
-            adresse,
-            typeUtilisateur: 'assistant'
-        });
-        // On sauvegarde le nouvel utilisateur dans la base de données
-        await nouvelUtilisateur.save();
-        // On crée un nouvel assistant associé à l'utilisateur créé précédemment
-        const nouvelAssistant = new Assistant({
-            utilisateur: nouvelUtilisateur._id,
-            nom,
-            prenom,
-            email,
-            motDePasse,
-            telephone,
-            adresse,
-            cabinetMedical,
-            typeUtilisateur: 'assistant' // Ajoutez cette ligne si nécessaire
-        });
-        // On sauvegarde le nouvel assistant dans la base de données
+        const utilisateur = await Utilisateur.findById(utilisateurId);
+
+        if (!utilisateur || utilisateur.typeUtilisateur !== 'assistant') {
+            return res.status(400).json({ message: "L'utilisateur n'est pas un assistant ou n'existe pas." });
+        }
+
+        const nouvelAssistant = new Assistant({ utilisateur: utilisateurId /* , ...autres champs */ });
         await nouvelAssistant.save();
+
         res.json(nouvelAssistant);
     } catch (error) {
         console.error(error.message);

@@ -19,6 +19,7 @@ const certificatRouter = require('./routes/Certificat.Routes');
 const consultationRouter = require('./routes/Consultation.Routes');
 const prescriptionRouter = require('./routes/Prescription.Routes');
 const dossierMedicalRouter = require('./routes/DossierMedical.Routes');
+const utilisateurRouter = require('./routes/Utilisateur.Routes');
 
 const app = express();
 
@@ -46,6 +47,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(cors({
+  origin: 'projet-pfe-lemon.vercel.app'
+}));
+
+
 // Routes
 app.use('/', indexRouter);
 app.use('/agendas', agendasRouter);
@@ -57,13 +64,12 @@ app.use('/cabinet-medical', cabinetMedicalRoutes);
 app.use('/certificat', certificatRouter);
 app.use('/consultation', consultationRouter);
 app.use('/prescription', prescriptionRouter);
-  app.use('/DossierMedical', dossierMedicalRouter);
+app.use('/DossierMedical', dossierMedicalRouter);
+app.use('/Utilisateur', utilisateurRouter);
 
 
 
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
+
 
 
 

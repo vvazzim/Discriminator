@@ -24,9 +24,9 @@ exports.getUtilisateurById = async (req, res) => {
 };
 
 exports.ajouterUtilisateur = async (req, res) => {
-    const { nom, prenom, email, motDePasse, telephone, adresse } = req.body;
+    const { nom, prenom, email, motDePasse, telephone, adresse, typeUtilisateur } = req.body;
     try {
-        const nouvelUtilisateur = new Utilisateur({ nom, prenom, email, motDePasse, telephone, adresse });
+        const nouvelUtilisateur = new Utilisateur({ nom, prenom, email, motDePasse, telephone, adresse, typeUtilisateur });
         await nouvelUtilisateur.save();
         res.json(nouvelUtilisateur);
     } catch (error) {
@@ -34,6 +34,8 @@ exports.ajouterUtilisateur = async (req, res) => {
         res.status(500).send('Erreur du serveur');
     }
 };
+
+
 
 exports.modifierUtilisateur = async (req, res) => {
     const { nom, prenom, email, motDePasse, telephone, adresse } = req.body;
