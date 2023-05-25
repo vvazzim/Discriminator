@@ -1,12 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const fichierMedicalCtrl = require('../Controlers/FichierMedical.Controler');
-const { authenticate, authorize } = require('../middleware/auth');
+    const express = require('express');
+    const router = express.Router();
+    const fichierMedicalCtrl = require('../Controlers/FichierMedical.Controler');
+    const { authenticate, authorize } = require('../middleware/auth');
 
-router.get('/', authenticate, authorize('medecin', 'secretaire'), fichierMedicalCtrl.getListeFichiersMedical);
-router.get('/:id', authenticate, authorize('medecin', 'secretaire'), fichierMedicalCtrl.getFichierMedicalById);
-router.post('/', authenticate, authorize('medecin'), fichierMedicalCtrl.ajouterFichierMedical);
-router.put('/:id', authenticate, authorize('medecin'), fichierMedicalCtrl.modifierFichierMedical);
-router.delete('/:id', authenticate, authorize('medecin'), fichierMedicalCtrl.supprimerFichierMedical);
+    router.get('/', fichierMedicalCtrl.getAllFichierMedicalFromDossier);
+    router.get('/:id', fichierMedicalCtrl.getFichierMedical);
+    router.post('/', fichierMedicalCtrl.createFichierMedical);
+    router.put('/:id', fichierMedicalCtrl.updateFichierMedical);
+    router.delete('/:id', fichierMedicalCtrl.deleteFichierMedical);
 
-module.exports = router;
+    module.exports = router;

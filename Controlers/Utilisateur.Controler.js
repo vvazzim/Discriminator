@@ -1,8 +1,26 @@
-const Utilisateur = require('../models/Utilisateur.model');
+const { Utilisateur, Patient, Medecin, Assistant } = require('../models/Utilisateur.model');
+const models = require('../models/Utilisateur.model');
+const { login, hashPassword } = require('../middleware/auth');
+
 
 exports.getListeUtilisateurs = async (req, res) => {
+    const typeUtilisateur = req.query.typeUtilisateur;
+    let Model;
+    switch(typeUtilisateur) {
+        case 'Patient':
+            Model = Patient;
+            break;
+        case 'Medecin':
+            Model = Medecin;
+            break;
+        case 'Assistant':
+            Model = Assistant;
+            break;
+        default:
+            return res.status(400).send('Type d\'utilisateur non valide');
+    }
     try {
-        const listeUtilisateurs = await Utilisateur.find();
+        const listeUtilisateurs = await Model.find();
         res.json(listeUtilisateurs);
     } catch (error) {
         console.error(error.message);
@@ -23,18 +41,37 @@ exports.getUtilisateurById = async (req, res) => {
     }
 };
 
+
 exports.ajouterUtilisateur = async (req, res) => {
-    const { nom, prenom, email, motDePasse, telephone, adresse, typeUtilisateur } = req.body;
+    const { email, password, nom, prenom, telephone, adresse, typeUtilisateur, ...additionalInfo } = req.body;
     try {
-        const nouvelUtilisateur = new Utilisateur({ nom, prenom, email, motDePasse, telephone, adresse, typeUtilisateur });
-        await nouvelUtilisateur.save();
-        res.json(nouvelUtilisateur);
+        let newUser;
+        const userInfo = { email, nom, prenom, telephone, adresse, typeUtilisateur };
+
+        // Chiffrer le mot de passe
+        const hashedPassword = await hashPassword(password);
+
+        switch (typeUtilisateur) {
+            case 'Patient':
+                newUser = new models.Patient({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                break;
+            case 'Medecin':
+                newUser = new models.Medecin({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                break;
+            case 'Assistant':
+                newUser = new models.Assistant({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                break;
+            default:
+                return res.status(400).send('Type d\'utilisateur non valide');
+        }
+
+        await newUser.save();
+        res.status(201).json(newUser);
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Erreur du serveur');
     }
 };
-
 
 
 exports.modifierUtilisateur = async (req, res) => {

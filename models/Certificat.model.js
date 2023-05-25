@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const FichierMedical = require('./FichierMedical.model');
+const { Schema } = mongoose;
+const FichierMedical = require('./fichierMedical.model');
 
-const certificatMedicalSchema = new Schema( {
+const certificatSchema = new Schema({
     medecin: {
         type: Schema.Types.ObjectId,
         ref: 'Medecin',
@@ -17,6 +17,5 @@ const certificatMedicalSchema = new Schema( {
     recommandations: String,
 });
 
-certificatMedicalSchema.add(FichierMedical.schema);
-
-module.exports = mongoose.model('CertificatMedical', certificatMedicalSchema);
+const Certificat = FichierMedical.discriminator('Certificat', certificatSchema);
+module.exports = Certificat;

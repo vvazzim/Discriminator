@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const { extendSchema } = require('mongoose-schema-extend');
-const FichierMedical = require('./FichierMedical.model');
+const { Schema } = mongoose;
+const FichierMedical = require('./fichierMedical.model');
 
-const lettreOrientationSchema = new Schema( {
+const lettreOrientationSchema = new Schema({
     medecin: {
         type: Schema.Types.ObjectId,
         ref: 'Medecin',
@@ -21,6 +20,5 @@ const lettreOrientationSchema = new Schema( {
     raison: String,
 });
 
-lettreOrientationSchema.add(FichierMedical.schema);
-
-module.exports = mongoose.model('LettreOrientation', lettreOrientationSchema);
+const LettreOrientation = FichierMedical.discriminator('LettreOrientation', lettreOrientationSchema);
+module.exports = LettreOrientation;

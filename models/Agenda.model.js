@@ -35,4 +35,3 @@ const agendaSchema = new Schema({
 
 const Agenda = mongoose.model('Agenda', agendaSchema);
 module.exports = Agenda;
-

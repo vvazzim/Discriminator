@@ -3,10 +3,10 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const rdvController = require('../Controlers/RDV.Controler');
 
-router.get('/', auth(['medecin', 'secretaire']), rdvController.getListeRDV);
-router.get('/:id', auth(['medecin', 'secretaire']), rdvController.getRDVById);
-router.post('/', auth(['medecin', 'secretaire']), rdvController.ajouterRDV);
-router.put('/:id', auth(['medecin', 'secretaire']), rdvController.modifierRDV);
-router.delete('/:id', auth(['medecin', 'secretaire']), rdvController.supprimerRDV);
+router.get('/', rdvController.getListeRDV);
+router.get('/:id', rdvController.getRDVById);
+router.post('/', rdvController.ajouterRDV);
+router.put('/:id', rdvController.modifierRDV);
+router.delete('/:id', rdvController.supprimerRDV);
 
 module.exports = router;

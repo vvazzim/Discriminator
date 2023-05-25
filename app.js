@@ -11,15 +11,15 @@ const cors = require('cors');
 var indexRouter = require('./routes/index');
 const agendasRouter = require('./routes/Agenda.Routes');
 const archiveRouter = require('./routes/Archive.Routes');
-const arretTravailRouter = require('./routes/ArretTravail.Routes');
-const assistantRouter = require('./routes/Assistant.Routes');
-const bilanRouter = require('./routes/Bilan.Routes');
 const cabinetMedicalRoutes = require('./routes/CabinetMedical.Routes');
-const certificatRouter = require('./routes/Certificat.Routes');
 const consultationRouter = require('./routes/Consultation.Routes');
-const prescriptionRouter = require('./routes/Prescription.Routes');
+const cabinetMedicalRouter = require('./routes/CabinetMedical.Routes');
 const dossierMedicalRouter = require('./routes/DossierMedical.Routes');
 const utilisateurRouter = require('./routes/Utilisateur.Routes');
+const fichiermedicalRouter = require('./routes/FichierMedical.Routes');
+const rdvRouter = require('./routes/RDV.Routes');
+const auditRouter = require('./routes/Audit.Routes');
+
 
 const app = express();
 
@@ -48,28 +48,43 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+const allowedOrigins = ['http://localhost:3000', 'http://projet-pfe-lemon.vercel.app','http://localhost:3001'];
+
 app.use(cors({
-  origin: 'projet-pfe-lemon.vercel.app'
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
+
 
 
 // Routes
 app.use('/', indexRouter);
-app.use('/agendas', agendasRouter);
 app.use('/archive', archiveRouter);
-app.use('/arret-travail', arretTravailRouter);
-app.use('/assistant', assistantRouter);
-app.use('/bilan', bilanRouter);
+app.use('/agendas', agendasRouter);
 app.use('/cabinet-medical', cabinetMedicalRoutes);
-app.use('/certificat', certificatRouter);
 app.use('/consultation', consultationRouter);
-app.use('/prescription', prescriptionRouter);
+app.use('/cabinetMedical', cabinetMedicalRouter);
+app.use('/fichiermedical', fichiermedicalRouter);
 app.use('/DossierMedical', dossierMedicalRouter);
 app.use('/Utilisateur', utilisateurRouter);
+app.use('/Rdv', rdvRouter);
+app.use('/Audit', auditRouter);
 
 
-
-
+app.use((req, res, next) => {
+  console.log(`Received ${req.method} request to ${req.path}`);
+  console.log('Request body:', req.body);
+  next();
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 
 

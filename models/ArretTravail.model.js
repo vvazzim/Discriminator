@@ -1,14 +1,8 @@
-
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const FichierMedical = require('./FichierMedical.model');
+const { Schema } = mongoose;
+const FichierMedical = require('./fichierMedical.model');
 
 const arretTravailSchema = new Schema({
-    medecin: {
-        type: Schema.Types.ObjectId,
-        ref: 'Medecin',
-        required: true,
-    },
     patient: {
         type: Schema.Types.ObjectId,
         ref: 'Patient',
@@ -31,8 +25,5 @@ const arretTravailSchema = new Schema({
     },
 });
 
-
-
-arretTravailSchema.add(FichierMedical.schema);
-
-module.exports = mongoose.model('ArretTravail', arretTravailSchema);
+const ArretTravail = FichierMedical.discriminator('ArretTravail', arretTravailSchema);
+module.exports = ArretTravail;

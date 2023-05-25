@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const FichierMedical = require('./FichierMedical.model');
+const { Schema } = mongoose;
+const FichierMedical = require('./fichierMedical.model');
 
-const bilanSchema = new Schema( {
+const bilanSchema = new Schema({
     poids: {
         type: Number,
         required: true,
@@ -35,6 +35,5 @@ const bilanSchema = new Schema( {
     },
 });
 
-bilanSchema.add(FichierMedical.schema);
-
-module.exports = mongoose.model('Bilan', bilanSchema);
+const Bilan = FichierMedical.discriminator('Bilan', bilanSchema);
+module.exports = Bilan;
