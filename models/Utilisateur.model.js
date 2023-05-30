@@ -22,7 +22,7 @@ const patientSchema = new Schema({
     dossiersMedicaux: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'DossierMedical',
+            ref: 'FichierMedical',
         },
     ],
 });

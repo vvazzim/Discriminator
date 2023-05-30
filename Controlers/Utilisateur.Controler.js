@@ -1,6 +1,8 @@
 const { Utilisateur, Patient, Medecin, Assistant } = require('../models/Utilisateur.model');
 const models = require('../models/Utilisateur.model');
 const { login, hashPassword } = require('../middleware/auth');
+const Cabinet = require('../models/CabinetMedical.model');
+
 
 
 exports.getListeUtilisateurs = async (req, res) => {
@@ -43,35 +45,51 @@ exports.getUtilisateurById = async (req, res) => {
 
 
 exports.ajouterUtilisateur = async (req, res) => {
-    const { email, password, nom, prenom, telephone, adresse, typeUtilisateur, ...additionalInfo } = req.body;
+    const { email, motDePasse, nom, prenom, telephone, adresse, typeUtilisateur, cabinetId, ...additionalInfo } = req.body;
+
     try {
         let newUser;
         const userInfo = { email, nom, prenom, telephone, adresse, typeUtilisateur };
 
+        console.log('motDePasse:', motDePasse);
+        console.log(req.body);
+        console.log(motDePasse);
+
         // Chiffrer le mot de passe
-        const hashedPassword = await hashPassword(password);
+        const hashedPassword = await hashPassword(motDePasse);
+
+        console.log('hashedPassword:', hashedPassword);
+
+        // Check if the cabinet exists
+        const cabinet = await Cabinet.findById(cabinetId);
+        if (!cabinet) {
+            console.error("Cabinet not found with id: ", cabinetId);
+            return res.status(404).send('Cabinet not found');
+        }
 
         switch (typeUtilisateur) {
             case 'Patient':
-                newUser = new models.Patient({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                newUser = new models.Patient({ ...userInfo, motDePasse: hashedPassword, ...additionalInfo });
                 break;
             case 'Medecin':
-                newUser = new models.Medecin({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                newUser = new models.Medecin({ ...userInfo, motDePasse: hashedPassword, cabinets: [cabinetId], ...additionalInfo });
                 break;
             case 'Assistant':
-                newUser = new models.Assistant({ ...userInfo, password: hashedPassword, ...additionalInfo });
+                newUser = new models.Assistant({ ...userInfo, motDePasse: hashedPassword, ...additionalInfo });
                 break;
             default:
                 return res.status(400).send('Type d\'utilisateur non valide');
         }
 
+
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
-        console.error(error.message);
+        console.error("Error while adding user: ", error);
         res.status(500).send('Erreur du serveur');
     }
 };
+
 
 
 exports.modifierUtilisateur = async (req, res) => {

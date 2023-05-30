@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const { login } = require('./middleware/auth');
+const authController = require('./middleware/auth');
 
 
 // Importing routes
@@ -74,6 +77,11 @@ app.use('/DossierMedical', dossierMedicalRouter);
 app.use('/Utilisateur', utilisateurRouter);
 app.use('/Rdv', rdvRouter);
 app.use('/Audit', auditRouter);
+app.use(bodyParser.json());
+app.post('/login', login);
+app.post('/register', authController.register);
+
+
 
 
 app.use((req, res, next) => {

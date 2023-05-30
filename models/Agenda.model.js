@@ -10,25 +10,32 @@ const agendaSchema = new Schema({
             values: ['Medecin', 'Patient'],
         },
     },
-    date: {
-        type: Date,
-        required: true,
-    },
+
     disponibilites: [
         {
+            date: {
+                type: Date,
+                required: true,
+            },
             jour: {
                 type: String,
                 enum: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
                 required: true
             },
-            heureDebut: {
-                type: Date,
-                required: true,
-            },
-            heureFin: {
-                type: Date,
-                required: true,
-            },
+            shift:[
+                {
+                        heureDebut: {
+                        type: Date,
+                        required: true,
+                    },
+                        heureFin: {
+                        type: Date,
+                        required: true,
+                    },
+                }
+            ]
+
+
         },
     ],
 });
